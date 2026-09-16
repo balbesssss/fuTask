@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using TaskService;
 using TaskService.Data;
 using TaskService.DTO;
 using TaskService.Models;
@@ -82,9 +81,6 @@ app.MapPost("/api/user/",async (CreateUser user, AppDbContext db) =>
 
 app.MapGet("/api/user/",async(AppDbContext db) => await db.Users.ToArrayAsync());
 
-app.MapPost("/api/auth/register" , async(AppDbContext db) =>
-{
-    return "asdasd";
-});
+
 
 app.Run();
