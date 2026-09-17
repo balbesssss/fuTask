@@ -7,5 +7,5 @@ namespace TaskService.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<TaskItem> Tasks => Set<TaskItem>();
-    public DbSet<User> Users => Set<User>();
+    // public DbSet<User> Users => Set<User>();
 }
