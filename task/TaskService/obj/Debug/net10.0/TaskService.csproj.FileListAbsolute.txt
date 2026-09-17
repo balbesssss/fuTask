@@ -149,3 +149,12 @@ C:\fuTask\task\TaskService\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\fuTask\task\TaskService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\fuTask\task\TaskService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.MvcApplicationPartsAssemblyInfo.cs
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll

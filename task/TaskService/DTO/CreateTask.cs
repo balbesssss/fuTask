@@ -1,8 +1,8 @@
-using System;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskService.DTO;
 public record CreateTask
 (
-    string Title, string Description
+    [Required]string Title,
+    string Description
 );
