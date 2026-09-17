@@ -62,7 +62,10 @@ app.UseSwaggerUI();
 app.MapGet("/api/task/", async(AppDbContext db) => await db.Tasks.ToArrayAsync());
 app.MapPost("/api/task/", async (CreateTask createTask, AppDbContext db, IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions) =>
 {
-    // var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    if (createTask.Title is null)
+    {
+        return Results.BadRequest("Title is null");
+    } 
     var NewTask = new TaskItem { Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, Title = createTask.Title, Description = createTask.Description, Status = TaskService.Models.TaskStatus.New };
     db.Tasks.Add(NewTask);
     await db.SaveChangesAsync();
