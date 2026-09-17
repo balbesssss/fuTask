@@ -11,8 +11,8 @@ using TaskService.Data;
 namespace TaskService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260915212530_NewTask")]
-    partial class NewTask
+    [Migration("20260917101329_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
