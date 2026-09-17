@@ -1,7 +1,7 @@
 using System.Text.Json;
 using TaskService.Models;
 
-namespace TaskService.Utils.Retry;
+namespace TaskService.Utils;
 
 static public class Retry
 {

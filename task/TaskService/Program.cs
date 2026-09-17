@@ -5,16 +5,33 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using TaskService.Data;
 using TaskService.DTO;
 using TaskService.Models;
 using TaskService.Utils;
-using TaskService.Utils.Retry;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "JWT Authorization header using the Bearer scheme.",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        BearerFormat = "JWT"
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
 
 builder.Services.AddSingleton(new JsonSerializerOptions
 {
@@ -61,26 +78,41 @@ app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/api/task/", async(AppDbContext db) => await db.Tasks.ToArrayAsync());
+app.MapGet("/api/task/", async(AppDbContext db, ClaimsPrincipal user) => 
+    {
+        var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        return await db.Tasks.Where(u => u.UserId == userId).ToArrayAsync();
+    }
+).RequireAuthorization();
+
 app.MapPost("/api/task/", async (ClaimsPrincipal user,CreateTask createTask,AppDbContext db,IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions) =>
 {
     var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-    var NewTask = new TaskItem{Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, Title = createTask.Title, Description = createTask.Description, Status = TaskService.Models.TaskStatus.New};
+
+    var NewTask = new TaskItem{
+        Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, 
+        Title = createTask.Title, Description = createTask.Description, 
+        Status = StatusTasks.New, UserId = UserId};
+
     db.Tasks.Add(NewTask);
     await db.SaveChangesAsync();
     _ = Retry.SendWebHook(httpFactory,jsonOptions,NewTask);
     return Results.Created($"/api/task/{NewTask.Id}",NewTask);
+
 }).RequireAuthorization();
 
-app.MapGet("/api/task/{id}", async (Guid id, AppDbContext db) => 
+app.MapGet("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContext db) => 
 {
-   var task = await db.Tasks.FindAsync(id);
-   return task is null? Results.NotFound(): Results.Ok(task);
-});
+    var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-app.MapDelete("/api/task/{id}", async (Guid id, AppDbContext db) =>
+    var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
+    return  task is null? Results.NotFound(): Results.Ok(task);
+}).RequireAuthorization();
+
+app.MapDelete("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContext db) =>
 {
-    var task = await db.Tasks.FindAsync(id);
+    var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
     if (task is null)
     {
         return Results.NotFound();
@@ -88,19 +120,21 @@ app.MapDelete("/api/task/{id}", async (Guid id, AppDbContext db) =>
     db.Tasks.Remove(task);
     await db.SaveChangesAsync();
     return Results.NoContent();
+}).RequireAuthorization();
+
+
+app.MapGet("/api/user/",async(AppDbContext db) => 
+{
+    await db.Users.Select(u => new { u.Id, u.Name }).ToArrayAsync();
 });
-
-
-app.MapGet("/api/user/",async(AppDbContext db) => await db.Users.ToArrayAsync());
 
 app.MapGet("/api/user/{id}",async (Guid id, AppDbContext db) =>
 {
-    var user = await db.Users.FindAsync(id);
-    if (user is null)
-    {
-        return Results.NotFound();
-    }
-    return Results.Ok(user);
+    var user = await db.Users
+        .Where(u => u.Id == id)
+        .Select(u => new { u.Id, u.Name })
+        .FirstOrDefaultAsync();
+    return user is null ? Results.NotFound() : Results.Ok(user);
 });
 
 app.MapPost("/api/auth/register/", async (CreateUser user,AppDbContext db) =>
