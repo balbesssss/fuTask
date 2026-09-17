@@ -2,9 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using TaskService.Data;
 using TaskService.DTO;
 using TaskService.Models;
@@ -55,22 +53,22 @@ builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlite(builder.C
 
 var app = builder.Build();
 
-app.UseAuthentication();
-app.UseAuthorization();
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/api/task/", async(AppDbContext db) => await db.Tasks.ToArrayAsync());
-app.MapPost("/api/task/", async (ClaimsPrincipal user,CreateTask createTask,AppDbContext db,IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions) =>
+app.MapPost("/api/task/", async (CreateTask createTask, AppDbContext db, IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions) =>
 {
     // var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-    var NewTask = new TaskItem{Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, Title = createTask.Title, Description = createTask.Description, Status = TaskService.Models.TaskStatus.New};
+    var NewTask = new TaskItem { Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, Title = createTask.Title, Description = createTask.Description, Status = TaskService.Models.TaskStatus.New };
     db.Tasks.Add(NewTask);
     await db.SaveChangesAsync();
-    _ = Retry.SendWebHook(httpFactory,jsonOptions,NewTask);
-    return Results.Created($"/api/task/{NewTask.Id}",NewTask);
-}).RequireAuthorization();
+    _ = Retry.SendWebHook(httpFactory, jsonOptions, NewTask);
+    return Results.Created($"/api/task/{NewTask.Id}", NewTask);
+});
 
 app.MapGet("/api/task/{id}", async (Guid id, AppDbContext db) => 
 {

@@ -150,6 +150,26 @@ C:\fuTask\task\TaskService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.d
 C:\fuTask\task\TaskService\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.MvcApplicationPartsAssemblyInfo.cs
 <<<<<<< HEAD
+=======
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\fuTask\task\TaskService\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+>>>>>>> 82d1698f763fda77e96ab51f8813fdc75614a28c
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.csproj.AssemblyReference.cache
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.AssemblyInfoInputs.cache
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.AssemblyInfo.cs
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.csproj.CoreCompileInputs.cache
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.sourcelink.json
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debug\net10.0\appsettings.json
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debug\net10.0\dotnet-tools.json
@@ -277,15 +297,6 @@ C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debu
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debug\net10.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debug\net10.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\bin\Debug\net10.0\runtimes\win-x86\native\e_sqlite3.dll
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.csproj.AssemblyReference.cache
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\rpswa.dswa.cache.json
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.AssemblyInfoInputs.cache
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.AssemblyInfo.cs
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.csproj.CoreCompileInputs.cache
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.sourcelink.json
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
@@ -301,14 +312,3 @@ C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debu
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.pdb
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\TaskService.genruntimeconfig.cache
 C:\Users\Кира Йошикаге\Downloads\fc\fuTask\task\TaskService\obj\Debug\net10.0\ref\TaskService.dll
-=======
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
-C:\fuTask\task\TaskService\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
->>>>>>> 82d1698f763fda77e96ab51f8813fdc75614a28c
