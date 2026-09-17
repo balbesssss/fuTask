@@ -11,7 +11,7 @@ public class Utils
     {
         return _hasher.HashPassword(user, password);
     }
-    
+        
     public bool CheckPassword(string password, string hash, User user)
     {
         return _hasher.VerifyHashedPassword(user, hash, password) == PasswordVerificationResult.Success;
