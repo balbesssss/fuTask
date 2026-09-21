@@ -60,6 +60,7 @@ namespace TaskSerrvice.Desctop
                 return;
             }
             MessageBox.Show("Удалено");
+            TaskForm.dg?.Rows.Remove(TaskForm._row);
             return;
         }
     }

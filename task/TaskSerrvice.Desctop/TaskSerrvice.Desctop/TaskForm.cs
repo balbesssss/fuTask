@@ -8,6 +8,8 @@ namespace TaskSerrvice.Desctop
     public partial class TaskForm : Form
     {
         public static TaskForm? Instance { get; private set; }
+        public static DataGridView? dg = null;
+        public static DataGridViewRow? _row = null;
         public TaskForm()
         {
             InitializeComponent();
@@ -33,6 +35,7 @@ namespace TaskSerrvice.Desctop
             Point topRight = new Point(rowRect.Right + 570, rowRect.Top + 320);
             Point onForm = dataGridView1.PointToClient(dataGridView1.PointToScreen(topRight));
             Action.GetAction(Instance,onForm, id).ShowForTask();
+            _row = row;
         }
 
         private async void TaskFormLoad(object? sender, EventArgs e)
@@ -50,6 +53,7 @@ namespace TaskSerrvice.Desctop
                 var tasks = await response.Content.ReadFromJsonAsync<List<TaskItem>>(Session.JsonOptions);
                 dataGridView1.AutoGenerateColumns = false;
                 dataGridView1.DataSource = tasks;
+                
                 
             }
             catch (HttpRequestException ex)
