@@ -50,6 +50,7 @@
             button2.TabIndex = 1;
             button2.Text = "Удалить";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // Action
             // 
@@ -62,6 +63,11 @@
             StartPosition = FormStartPosition.Manual;
             Text = "Action";
             ResumeLayout(false);
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

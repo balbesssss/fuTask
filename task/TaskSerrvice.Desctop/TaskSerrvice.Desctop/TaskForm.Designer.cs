@@ -84,6 +84,7 @@
             ClientSize = new Size(800, 450);
             Controls.Add(dataGridView1);
             Name = "TaskForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "TaskForm";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

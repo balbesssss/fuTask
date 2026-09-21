@@ -140,7 +140,7 @@ app.MapDelete("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContex
     return Results.NoContent();
 }).RequireAuthorization();
 
-app.MapPatch("/api/task{id}",async (Guid id, EditTask editTask, ClaimsPrincipal user, AppDbContext db, ILogger<Program> logger) =>
+app.MapPatch("/api/task/{id}",async (Guid id, EditTask editTask, ClaimsPrincipal user, AppDbContext db, ILogger<Program> logger) =>
 {
     var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
