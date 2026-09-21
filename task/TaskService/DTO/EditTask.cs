@@ -1,12 +1,13 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using TaskService.DTO;
 
-namespace TaskService.DTO;
+namespace TaskService;
 
-public record CreateTask
+public record EditTask
 (
-    [Required][StringLength(150,MinimumLength = 1)]
+    [StringLength(150)]
     string Title,
     [StringLength(1000)]
     string Description
 );
-

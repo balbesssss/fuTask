@@ -5,7 +5,7 @@ namespace TaskService.Utils;
 
 static public class Retry
 {
-    public async static Task SendWebHook(IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions, TaskItem task)
+    public async static Task SendWebHook(IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions, TaskItem task, ILogger<Program> logger)
     {
         for (int i = 0; i<3; i++)
         {
@@ -17,11 +17,11 @@ static public class Retry
                 {
                     return ;
                 }
-                Console.WriteLine($"Attempt {i+1}: status {response.StatusCode}");
+                logger.LogWarning("Attempt {Attempt}: status {response}",i+1,response.StatusCode);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Attempt \"{i+1}\" | Message {ex.Message}");
+                logger.LogError("Attempt: {Attempt} | Service is not responding: {Error}", i+1, ex.Message);
             }
             if (i<2)
             {
