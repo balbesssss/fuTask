@@ -6,6 +6,11 @@ __pycache__/
 # Build artifacts
 bin/
 obj/
+*.db
+*.db-shm
+*.db-wal
+.vs/
+*.user
 
 # SQLite databases
 *.db
