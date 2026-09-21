@@ -2,11 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TaskService.DTO;
 
-public record CreateTask
+public record EditTask
 (
-    [Required][StringLength(150,MinimumLength = 1)]
+    [StringLength(150)]
     string Title,
     [StringLength(1000)]
     string Description
 );
-

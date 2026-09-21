@@ -69,6 +69,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddValidation();
+
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
@@ -78,38 +81,52 @@ app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/api/task/", async(AppDbContext db, ClaimsPrincipal user) => 
+app.MapGet("/api/task/", async(AppDbContext db, ClaimsPrincipal user) =>
+{
+    var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    var tasks = await db.Tasks
+    .Where(u => u.UserId == userId)
+    .Select(t => new ResponseTask
     {
-        var userId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        return await db.Tasks.Where(u => u.UserId == userId).ToArrayAsync();
-    }
-).RequireAuthorization();
+        Id = t.Id,
+        Title = t.Title,
+        Description = t.Description,
+        Status = t.Status,
+        CreatedAt = t.CreatedAt,
+        UserId = t.UserId
+    })
+    .ToArrayAsync();
+    return tasks;
+}).RequireAuthorization();
 
-app.MapPost("/api/task/", async (ClaimsPrincipal user,CreateTask createTask,AppDbContext db,IHttpClientFactory httpFactory, JsonSerializerOptions jsonOptions) =>
+app.MapPost("/api/task/", async (
+    ClaimsPrincipal user,CreateTask createTask,
+    AppDbContext db,IHttpClientFactory httpFactory,
+    JsonSerializerOptions jsonOptions, ILogger<Program> logger) =>
 {
     var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
     var NewTask = new TaskItem{
-        Id = Guid.NewGuid(), CreatedAt = DateTime.UtcNow, 
-        Title = createTask.Title, Description = createTask.Description, 
+        Id = Guid.NewGuid(), Title = createTask.Title,
+        Description = createTask.Description,CreatedAt = DateTime.UtcNow,  
         Status = StatusTasks.New, UserId = UserId};
-
     db.Tasks.Add(NewTask);
     await db.SaveChangesAsync();
-    _ = Retry.SendWebHook(httpFactory,jsonOptions,NewTask);
-    return Results.Created($"/api/task/{NewTask.Id}",NewTask);
-
+    logger.LogInformation("Task {ID} was created by user = {USER}", NewTask.Id, UserId);
+    _ =  Retry.SendWebHook(httpFactory,jsonOptions,NewTask, logger);
+    return Results.Created($"/api/task/{NewTask.Id}", new ResponseTask(NewTask));
 }).RequireAuthorization();
 
 app.MapGet("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContext db) => 
 {
     var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-    var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
-    return  task is null? Results.NotFound(): Results.Ok(task);
+    var task = await db.Tasks
+    .Where(t => t.Id == id && t.UserId == UserId)
+    .Select(t => new ResponseTask { Id = t.Id, Title = t.Title, Description = t.Description, CreatedAt = t.CreatedAt, Status = t.Status, UserId = t.UserId })
+    .FirstOrDefaultAsync();
+    return task is null? Results.NotFound(): Results.Ok(task);
 }).RequireAuthorization();
 
-app.MapDelete("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContext db) =>
+app.MapDelete("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContext db, ILogger<Program> logger) =>
 {
     var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
@@ -119,14 +136,36 @@ app.MapDelete("/api/task/{id}", async (ClaimsPrincipal user,Guid id, AppDbContex
     }
     db.Tasks.Remove(task);
     await db.SaveChangesAsync();
+    logger.LogInformation("Task {TASK} is delete by {USER}",task.Id,UserId);
     return Results.NoContent();
 }).RequireAuthorization();
 
-
-app.MapGet("/api/user/",async(AppDbContext db) => 
+app.MapPatch("/api/task{id}",async (Guid id, EditTask editTask, ClaimsPrincipal user, AppDbContext db, ILogger<Program> logger) =>
 {
-    await db.Users.Select(u => new { u.Id, u.Name }).ToArrayAsync();
-});
+    var UserId = Guid.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
+    var editType = typeof(EditTask);
+    var taskType = typeof(TaskItem);
+    foreach (var editProp in editType.GetProperties())
+    {
+        var value = editProp.GetValue(editTask);
+        if (value == null)
+        {
+            continue;
+        }
+        var taskProp = taskType.GetProperty(editProp.Name);
+        if (taskProp == null)
+        {
+            continue;
+        }
+        taskProp.SetValue(task, value);
+    }
+    await db.SaveChangesAsync();
+    return Results.Ok(new ResponseTask(task!));
+}).RequireAuthorization();
+
+
+app.MapGet("/api/user/",async(AppDbContext db) => await db.Users.Select(u => new { u.Id, u.Name }).ToArrayAsync());
 
 app.MapGet("/api/user/{id}",async (Guid id, AppDbContext db) =>
 {
@@ -137,33 +176,38 @@ app.MapGet("/api/user/{id}",async (Guid id, AppDbContext db) =>
     return user is null ? Results.NotFound() : Results.Ok(user);
 });
 
-app.MapPost("/api/auth/register/", async (CreateUser user,AppDbContext db) =>
+app.MapPost("/api/auth/register/", async (CreateUser user,AppDbContext db, ILogger<Program> logger) =>
 {
     var UserExists = await db.Users.FirstOrDefaultAsync(u => u.Name == user.Name);
     if (UserExists is not null)
     {
+        logger.LogWarning("User with name {UserName} already exists", user.Name);
         return Results.Conflict("User already exists");
     }
     var NewUser = new User(Guid.NewGuid(),user.Name);
     NewUser.PasswordHash = PasswordHashVer.Hash(user.Password,NewUser);
     db.Users.Add(NewUser);
     await db.SaveChangesAsync();
-    return Results.Created($"/api/user/{NewUser.Id}",new {NewUser.Id,NewUser.Name} );
+    logger.LogInformation("New user {USER} is register in system ",NewUser.Id);
+    return Results.Created($"/api/user/{NewUser.Id}", new { NewUser.Id, NewUser.Name });
 });
 
-app.MapPost("/api/auth/login/", async (LoginUser user,AppDbContext db) =>
+app.MapPost("/api/auth/login/", async (LoginUser user,AppDbContext db, ILogger<Program> logger) =>
 {
     var foundUser = await db.Users.FirstOrDefaultAsync(u => u.Name == user.Name);
     if (foundUser is null)
     {
+        logger.LogWarning("Login attempt failed: user {UserName} not found", user.Name);
         return Results.Unauthorized();
     }
     if(!PasswordHashVer.Verify(user.Password, foundUser.PasswordHash, foundUser))
     {
+        logger.LogWarning("User {ID} invalid password", foundUser.Id);
         return Results.Unauthorized();
     }
     var token = JWT.GenerateToken(foundUser,builder.Configuration);
-    return Results.Ok(new{token});
+    logger.LogInformation("User {USER} create token in {DATE}", foundUser.Id, DateTime.UtcNow);
+    return Results.Ok(new { token });
 });
 
 app.Run();
