@@ -1,9 +1,5 @@
 ﻿
-using System.Net.Http.Headers;
-using TaskService.Desktop;
-using TaskService.Models;
-
-namespace TaskSerrvice.Desctop
+namespace TaskService.Desctop
 {
     public partial class Action : Form
     {
@@ -54,13 +50,12 @@ namespace TaskSerrvice.Desctop
             var requests = new HttpRequestMessage(HttpMethod.Delete, $"/api/task/{Id}");
             requests.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Session.Token);
             var response = await Session.Client.SendAsync(requests);
-            if (!response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                MessageBox.Show($"Ошибка: {response.StatusCode}");
+                MessageBox.Show("Удалено");
                 return;
             }
-            MessageBox.Show("Удалено");
-            TaskForm.dg?.Rows.Remove(TaskForm._row);
+            MessageBox.Show($"Ошибка: {response.StatusCode}");
             return;
         }
     }

@@ -9,7 +9,7 @@ namespace TaskSerrvice.Desctop
     {
         public static TaskForm? Instance { get; private set; }
         public static DataGridView? dg = null;
-        public static DataGridViewRow? _row = null;
+        public static DataGridViewRow _row;
         public TaskForm()
         {
             InitializeComponent();
@@ -35,10 +35,9 @@ namespace TaskSerrvice.Desctop
             Point topRight = new Point(rowRect.Right + 570, rowRect.Top + 320);
             Point onForm = dataGridView1.PointToClient(dataGridView1.PointToScreen(topRight));
             Action.GetAction(Instance,onForm, id).ShowForTask();
-            _row = row;
         }
 
-        private async void TaskFormLoad(object? sender, EventArgs e)
+        public async void TaskFormLoad(object? sender, EventArgs e)
         {
             try
             {

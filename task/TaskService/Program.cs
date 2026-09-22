@@ -211,3 +211,4 @@ app.MapPost("/api/auth/login/", async (LoginUser user,AppDbContext db, ILogger<P
 });
 
 app.Run();
+public partial class Program { }

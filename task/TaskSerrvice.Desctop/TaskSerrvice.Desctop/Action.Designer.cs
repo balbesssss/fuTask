@@ -1,4 +1,4 @@
-﻿namespace TaskSerrvice.Desctop
+﻿namespace TaskService.Desctop
 {
     partial class Action
     {
