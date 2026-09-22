@@ -34,6 +34,7 @@
             Description = new DataGridViewTextBoxColumn();
             Status = new DataGridViewTextBoxColumn();
             CreatedAt = new DataGridViewTextBoxColumn();
+            AddTask = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -77,11 +78,22 @@
             CreatedAt.HeaderText = "CreatedAt";
             CreatedAt.Name = "CreatedAt";
             // 
+            // AddTask
+            // 
+            AddTask.Location = new Point(15, 350);
+            AddTask.Name = "AddTask";
+            AddTask.Size = new Size(75, 23);
+            AddTask.TabIndex = 2;
+            AddTask.Text = "Добавить";
+            AddTask.UseVisualStyleBackColor = true;
+            AddTask.Click += AddTask_Click;
+            // 
             // TaskForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(AddTask);
             Controls.Add(dataGridView1);
             Name = "TaskForm";
             StartPosition = FormStartPosition.CenterScreen;
@@ -91,11 +103,12 @@
         }
 
         #endregion
-        private DataGridView dataGridView1;
+        public static DataGridView dataGridView1;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Title;
         private DataGridViewTextBoxColumn Description;
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn CreatedAt;
+        private Button AddTask;
     }
 }

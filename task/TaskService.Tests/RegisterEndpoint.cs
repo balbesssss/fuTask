@@ -5,11 +5,11 @@ using TaskService.DTO;
 
 namespace TaskService.Tests;
 
-public class AuthEndPoint : IClassFixture<CustomWebApplicationFactory>
+public class RegisterEndoint : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
-    public AuthEndPoint(CustomWebApplicationFactory factory)
+    public RegisterEndoint(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }

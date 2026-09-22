@@ -8,10 +8,10 @@ namespace TaskSerrvice.Desctop
     public partial class TaskForm : Form
     {
         public static TaskForm? Instance { get; private set; }
-        public static DataGridView? dg = null;
         public static DataGridViewRow _row;
         public TaskForm()
         {
+            
             InitializeComponent();
             Load += TaskFormLoad;
             Instance = this;
@@ -21,6 +21,22 @@ namespace TaskSerrvice.Desctop
         public void ClearSelection()
         {
             dataGridView1.ClearSelection();
+        }
+        
+        public async static void RefreshTask()
+        {
+            var requests = new HttpRequestMessage(HttpMethod.Get, "/api/task/");
+            requests.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Session.Token);
+            var response = await Session.Client.SendAsync(requests);
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show($"Ошибка: {response.StatusCode}");
+                return;
+            }
+            var tasks = await response.Content.ReadFromJsonAsync<List<TaskItem>>(Session.JsonOptions);
+            dataGridView1.Rows.Clear();
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.DataSource = tasks;
         }
 
         private void DataGridView1_SelectionChanged(object? sender, EventArgs e)
@@ -34,7 +50,8 @@ namespace TaskSerrvice.Desctop
             var rowRect = dataGridView1.GetRowDisplayRectangle(row.Index, true);
             Point topRight = new Point(rowRect.Right + 570, rowRect.Top + 320);
             Point onForm = dataGridView1.PointToClient(dataGridView1.PointToScreen(topRight));
-            Action.GetAction(Instance,onForm, id).ShowForTask();
+            Action.GetAction(Instance, onForm, id).ShowForTask();
+            ClearSelection();
         }
 
         public async void TaskFormLoad(object? sender, EventArgs e)
@@ -52,8 +69,8 @@ namespace TaskSerrvice.Desctop
                 var tasks = await response.Content.ReadFromJsonAsync<List<TaskItem>>(Session.JsonOptions);
                 dataGridView1.AutoGenerateColumns = false;
                 dataGridView1.DataSource = tasks;
-                
-                
+
+
             }
             catch (HttpRequestException ex)
             {
@@ -61,6 +78,10 @@ namespace TaskSerrvice.Desctop
             }
         }
 
-
+        private void AddTask_Click(object sender, EventArgs e)
+        {
+            var addTask = new AddTask();
+            addTask.Show();
+        }
     }
 }
