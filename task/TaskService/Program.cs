@@ -219,5 +219,10 @@ app.MapPost("/api/auth/login/", async (LoginUser user,AppDbContext db, ILogger<P
     return Results.Ok(new { token });
 });
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 app.Run();
 public partial class Program { }
